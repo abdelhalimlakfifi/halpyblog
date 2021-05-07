@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\post;
 use App\Models\User;
 use App\Models\Subscription;
+use App\Models\followSys;
 class PostController extends Controller
 {
     public function index(){

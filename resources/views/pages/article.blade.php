@@ -68,6 +68,7 @@
                             <div class="media-body">
                                 <h6>Hello, I'm<br> {{ $name[0]->name }}</h6>
                                 @if( $name[0]->id != Auth::id())
+                                    
                                     <button type="submit" onclick="follow()" class="btn btn-outline-success float-right" id="follow" >Follow</button>
                                     <!-- /follow/{{$name[0]->id}} -->
                                     <script>
@@ -86,9 +87,7 @@
                                                 }
                                             });
                                         }
-                                        
                                     </script>
-                                    
                                 @endif
                             </div>
                         </div>
