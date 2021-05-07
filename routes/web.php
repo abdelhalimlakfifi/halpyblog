@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\SubscirptionController;
+use App\Http\Controllers\followSystem;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -24,3 +25,4 @@ Route::Post('/create', [PostController::class, 'store']);
 Route::get('/articles', [PostController::class, 'Articles']);
 Route::get('/articles/{id}',[PostController::class, 'read']);
 Route::post('/subscription',[SubscirptionController::class, 'index']);
+Route::post('/follow', [followSystem::class, 'index']);

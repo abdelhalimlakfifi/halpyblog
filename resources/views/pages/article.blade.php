@@ -67,6 +67,29 @@
                         <div class="media align-items-center">
                             <div class="media-body">
                                 <h6>Hello, I'm<br> {{ $name[0]->name }}</h6>
+                                @if( $name[0]->id != Auth::id())
+                                    <button type="submit" onclick="follow()" class="btn btn-outline-success float-right" id="follow" >Follow</button>
+                                    <!-- /follow/{{$name[0]->id}} -->
+                                    <script>
+                                        function follow(){
+                                            var id = {{ $name[0]->id }};
+                                            var data = { idfollow: id };
+                                            $.ajax({
+                                                url: "/follow",
+                                                method: "post",
+                                                data: data,
+                                                headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                                                
+                                                success: function (result){
+                                                    document.getElementById("follow").className = "btn btn-danger float-right";
+                                                    document.getElementById("follow").innerHTML = "Unfollow";
+                                                }
+                                            });
+                                        }
+                                        
+                                    </script>
+                                    
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -106,4 +129,6 @@
         </div>
     </div>
 </div>
+<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
+
 @endsection

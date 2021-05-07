@@ -13,11 +13,14 @@ class FollowSystem extends Migration
      */
     public function up()
     {
-        Schema::create('subscriptions', function (Blueprint $table) {
+        Schema::create('followSystems', function (Blueprint $table) {
             $table->id();
-            $table->string('Email')->unique();
+            $table->unsignedBigInteger('id_user');
+            $table->unsignedBigInteger('id_followed');
             $table->rememberToken();
             $table->timestamps();
+            $table->foreign('id_user')->references('id')->on('users');
+            $table->foreign('id_followed')->references('id')->on('users');
         });
     }
 
