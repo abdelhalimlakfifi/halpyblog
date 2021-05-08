@@ -26,3 +26,4 @@ Route::get('/articles', [PostController::class, 'Articles']);
 Route::get('/articles/{id}',[PostController::class, 'read']);
 Route::post('/subscription',[SubscirptionController::class, 'index']);
 Route::post('/follow', [followSystem::class, 'index']);
+Route::post('/unfollow',[followSystem::class, 'unfollow']);

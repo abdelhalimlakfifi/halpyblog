@@ -7,6 +7,8 @@ use App\Models\post;
 use App\Models\User;
 use App\Models\Subscription;
 use App\Models\followSys;
+use Illuminate\Support\Facades\DB;
+
 class PostController extends Controller
 {
     public function index(){
@@ -60,13 +62,21 @@ class PostController extends Controller
     }
 
     public function read(Request $request){
-        //dd($request->id);
-
+        
         $article = post::where('id', $request->id)->get();
+        $user = Auth::id();
+        $followed = $article[0]->user_id;
+
+        $ifFollowed = DB::table('followSystems')
+                        ->where('id_followed','Like',$followed)
+                        ->where('id_user','Like',$user)
+                        ->count();
+        
+        //dd($user, $followed);
+        
         
         $author = User::where('id', $article[0]->user_id)->get();
-
         $latest = post::orderBy('created_at','desc')->limit(3)->get();
-        return view('pages.article',["post" => $article, "name" => $author, "latests" => $latest]);
+        return view('pages.article',["post" => $article, "name" => $author, "latests" => $latest, "ifFollowed"=>$ifFollowed]);
     }
 }

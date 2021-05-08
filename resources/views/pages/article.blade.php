@@ -68,8 +68,12 @@
                             <div class="media-body">
                                 <h6>Hello, I'm<br> {{ $name[0]->name }}</h6>
                                 @if( $name[0]->id != Auth::id())
+                                    @if( $ifFollowed == 1)
+                                        <button type="submit" onclick="unfollow()" class="btn btn-outline-danger float-right" id="follow" >Unfollow</button>
+                                    @else
+                                        <button type="submit" onclick="follow()" class="btn btn-outline-success float-right" id="follow" >Follow</button>   
+                                    @endif
                                     
-                                    <button type="submit" onclick="follow()" class="btn btn-outline-success float-right" id="follow" >Follow</button>
                                     <!-- /follow/{{$name[0]->id}} -->
                                     <script>
                                         function follow(){
@@ -84,6 +88,24 @@
                                                 success: function (result){
                                                     document.getElementById("follow").className = "btn btn-danger float-right";
                                                     document.getElementById("follow").innerHTML = "Unfollow";
+                                                    document.getElementById("follow").onclick = unfollow;
+                                                    
+                                                }
+                                            });
+                                        }
+                                        function unfollow(){
+                                            var author_id = {{ $name[0]->id }};
+                                            var data = { author_id: author_id };
+                                            $.ajax({
+                                                url: "/unfollow",
+                                                method: "post",
+                                                data: data,
+                                                headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                                                
+                                                success: function (result){
+                                                    document.getElementById("follow").className = "btn btn-success float-right";
+                                                    document.getElementById("follow").innerHTML = "follow";
+                                                    document.getElementById("follow").onclick = follow;   
                                                 }
                                             });
                                         }
@@ -129,5 +151,4 @@
     </div>
 </div>
 <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
-
 @endsection
