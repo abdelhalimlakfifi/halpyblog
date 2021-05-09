@@ -7,6 +7,7 @@ use App\Models\post;
 use App\Models\User;
 use App\Models\Subscription;
 use App\Models\followSys;
+use App\Models\followedNotification;
 use Illuminate\Support\Facades\DB;
 
 class PostController extends Controller
@@ -40,15 +41,24 @@ class PostController extends Controller
         $post->img_path = $newImagename;
         $post->save();
 
-
+        //send email
         $details = [
             'title' => $request->title,
             'body' => $request->article,
             'id' => $post->id
         ];
+        
         foreach($datas as $data){
             \Mail::to($data['Email'])->send(new \App\Mail\Subscription($details));
         }
+
+        //insert to followedNotification
+        $numOfollowers = follow
+        // $follow = new followedNotification;
+        // $follow->post_id = $post->id;
+        // $follow->followed_id = Auth::id();
+        // $follow->isViewed = 0;
+
         return redirect('/');
     }
 
