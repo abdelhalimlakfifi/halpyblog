@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\SubscirptionController;
 use App\Http\Controllers\followSystem;
+use App\Notifications\NewArticle;
+use App\Models\User;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -19,7 +21,6 @@ Route::get('/', [PostController::class, 'index']);
 
 Auth::routes();
 
-
 Route::get('/create', [PostController::class, 'Create']);
 Route::Post('/create', [PostController::class, 'store']);
 Route::get('/articles', [PostController::class, 'Articles']);
@@ -27,3 +28,4 @@ Route::get('/articles/{id}',[PostController::class, 'read']);
 Route::post('/subscription',[SubscirptionController::class, 'index']);
 Route::post('/follow', [followSystem::class, 'index']);
 Route::post('/unfollow',[followSystem::class, 'unfollow']);
+Route::get('/articles/{id}/notifread', [PostController::class, 'notifread']);

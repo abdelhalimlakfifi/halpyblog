@@ -8,4 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class followedNotification extends Model
 {
     use HasFactory;
+    protected $table = 'followedNotifications';
 }

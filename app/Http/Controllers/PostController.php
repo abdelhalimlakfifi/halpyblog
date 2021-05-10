@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\Subscription;
 use App\Models\followSys;
 use App\Models\followedNotification;
+use App\Notifications\NewArticle;
 use Illuminate\Support\Facades\DB;
 
 class PostController extends Controller
@@ -25,6 +26,7 @@ class PostController extends Controller
         return redirect('/login');
     }
     public function store(Request $request){
+        
         $datas = Subscription::all();
         $request->validate([
            'title'=>'required',
@@ -53,11 +55,19 @@ class PostController extends Controller
         }
 
         //insert to followedNotification
-        $numOfollowers = follow
-        // $follow = new followedNotification;
-        // $follow->post_id = $post->id;
-        // $follow->followed_id = Auth::id();
-        // $follow->isViewed = 0;
+        $getUsersForNotification = followSys::where('id_followed',Auth::id())->get();
+        //dd($getUsersForNotification[1]['id_user']);
+        foreach($getUsersForNotification as $usrNtc){
+            $followers = new followedNotification;
+            $followers->post_id = $post->id;
+            $followers->followed_id = Auth::id();
+            $followers->user_id = $usrNtc['id_user'];
+            $followers->isViewed = 0;
+            $followers->author = Auth::user()->name;
+            $followers->save();
+        }
+
+        // $followers = 
 
         return redirect('/');
     }
@@ -88,5 +98,11 @@ class PostController extends Controller
         $author = User::where('id', $article[0]->user_id)->get();
         $latest = post::orderBy('created_at','desc')->limit(3)->get();
         return view('pages.article',["post" => $article, "name" => $author, "latests" => $latest, "ifFollowed"=>$ifFollowed]);
+    }
+    public function notifread(Request $request){
+        //dd($request->id);
+        followedNotification::where('id',$request->id)->update(['isViewed'=>1]);
+        $post = followedNotification::where('id',$request->id)->get();
+        return redirect('/articles/'.$post[0]->post_id);
     }
 }

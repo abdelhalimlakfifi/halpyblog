@@ -20,6 +20,8 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="{{ URL::asset('css/style.css') }}">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+    <script src="https://kit.fontawesome.com/yourcode.js" crossorigin="anonymous"></script>
 
 </head>
 
@@ -45,6 +47,35 @@
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ml-auto">
                         @if(Auth::check())
+                            <li class="nav-item">
+                            <div class="dropdown" style="float: right; padding: 13px">
+                                <a href="#" onclick="return false;"  role="button" data-toggle="dropdown"
+                                    id="dropdownMenu1" data-target="#" style="float: left" aria-expanded="true">
+                                    <i class='far fa-bell' style="font-size:24px"></i>
+                                </a>
+                                
+                                @if(App\Models\followedNotification::where('user_id',Auth::id())->where('isViewed',0)->count())
+                                    <span class="badge badge-danger"> {{ App\Models\followedNotification::where('user_id',Auth::id())->where('isViewed',0)->count() }} </span>
+                                @endif
+                                <ul class="dropdown-menu dropdown-menu-left pull-right" role="menu"
+                                    aria-labelledby="dropdownMenu1">
+                                    <?php $notifications=  App\Models\followedNotification::where('user_id',Auth::id())->where('isViewed',0)->get() ?>
+                                    <ul class="timeline timeline-icons timeline-sm" style="margin:10px;width:210px">
+                                        @foreach($notifications as $notif)
+                                        <?php $post = App\Models\post::where('id',$notif->post_id)->get(); ?>
+                                        <li>
+                                            <p>
+                                               <strong> {{ $notif->author }}  </strong> published new artciles <a href="/articles/{{ $notif->id }}/notifread">{{ substr($post[0]->article,0,12)."..." }}</a>
+
+                                                <span class="timeline-date"> {{ $notif->created_at }} </span>
+                                            </p>
+                                        </li>
+                                        @endforeach
+                                    </ul>
+
+                                </ul>
+                            </div>
+                        </li>
                         <li class="nav-item">
                             <a class="nav-link" href="/articles">My articles</a>
                         </li>
@@ -88,7 +119,7 @@
                 </div>
             </div>
         </nav>
-        
+
         <main class="py-0">
             @yield('content')
         </main>
@@ -119,7 +150,7 @@
                             <label class="form-label" for="form5Example2">Email address</label>
                             <span id="sucess"></span>
                         </div>
-                        
+
                     </div>
                     <!--Grid column-->
 
@@ -144,21 +175,26 @@
     <script>
         $('.sub').on('click', function () {
             // subemail: sent as request to controller
-            var data = { submail:$("#submail").val() };
+            var data = {
+                submail: $("#submail").val()
+            };
             $.ajax({
                 url: "/subscription",
-                method:"post",
+                method: "post",
                 data: data,
-                headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
 
                 success: function (result) {
                     console.log(result);
                     document.getElementById('sucess').innerHTML = "Email saved";
-                    setTimeout(() => {document.getElementById('sucess').innerHTML = "";},3500);
+                    setTimeout(() => {
+                        document.getElementById('sucess').innerHTML = "";
+                    }, 3500);
                 }
             });
         });
-        
 
     </script>
     <!-- Footer -->

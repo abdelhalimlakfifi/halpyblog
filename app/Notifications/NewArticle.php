@@ -7,18 +7,19 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
+
 class NewArticle extends Notification
 {
     use Queueable;
-
+    public $post_id;
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($post_id)
     {
-        //
+        $this->post_id = $post_id;
     }
 
     /**
@@ -29,7 +30,7 @@ class NewArticle extends Notification
      */
     public function via($notifiable)
     {
-        return ['mail'];
+        return ['database'];
     }
 
     /**
@@ -55,7 +56,7 @@ class NewArticle extends Notification
     public function toArray($notifiable)
     {
         return [
-            //
+            'data' => $this->post_id
         ];
     }
 }
